@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu, theme, Avatar, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import {
   DashboardOutlined,
   UserOutlined,
-  SettingOutlined,
-  BarChartOutlined,
   LogoutOutlined,
   TeamOutlined,
+  AppstoreOutlined,
+  BankOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeSwitcher } from "./theme-switcher";
 
@@ -28,9 +29,26 @@ export function AdminDashboardLayout({
 }: AdminDashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  // Determine active menu key based on pathname
+  const getActiveKey = (path: string) => {
+    if (path === "/admin") return "1";
+    if (path === "/admin/users") return "2";
+    if (path === "/admin/categories") return "3";
+    if (path === "/admin/departments") return "4";
+    if (path === "/admin/assets") return "5";
+    return "1";
+  };
+
+  const [selectedKey, setSelectedKey] = useState(() => getActiveKey(pathname || "/admin"));
+
+  useEffect(() => {
+    setSelectedKey(getActiveKey(pathname || "/admin"));
+  }, [pathname]);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -63,16 +81,25 @@ export function AdminDashboardLayout({
       key: "2",
       icon: <TeamOutlined />,
       label: "User Management",
+      onClick: () => router.push("/admin/users"),
     },
     {
       key: "3",
-      icon: <BarChartOutlined />,
-      label: "Analytics",
+      icon: <AppstoreOutlined />,
+      label: "Asset Categories",
+      onClick: () => router.push("/admin/categories"),
     },
     {
       key: "4",
-      icon: <SettingOutlined />,
-      label: "Settings",
+      icon: <BankOutlined />,
+      label: "Departments",
+      onClick: () => router.push("/admin/departments"),
+    },
+    {
+      key: "5",
+      icon: <DeleteOutlined />,
+      label: "Manage Assets",
+      onClick: () => router.push("/admin/assets"),
     },
   ];
 
@@ -111,7 +138,7 @@ export function AdminDashboardLayout({
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={[selectedKey]}
           items={menuItems}
         />
       </Sider>

@@ -4,7 +4,11 @@ import { useState } from "react";
 import { Button, Input, Form } from "antd";
 import { toast } from "sonner";
 
-export function CreateUserForm() {
+interface CreateUserFormProps {
+  onSuccess?: () => void;
+}
+
+export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +32,9 @@ export function CreateUserForm() {
 
       toast.success("User created successfully!");
       form.resetFields();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
       toast.error(errorMessage);

@@ -2,11 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 import { AdminDashboardLayout } from "@/components/admin-dashboard-layout";
-import { Card, Statistic, Row, Col, Badge, Tabs } from "antd";
-import { CreateUserForm } from "@/components/create-user-form";
-import { CreateCategoryForm } from "@/components/create-category-form";
-import { CreateDepartmentForm } from "@/components/create-department-form";
-import { ManageAssets } from "@/components/manage-assets";
+import { Card, Statistic, Row, Col, Badge } from "antd";
 import { hasEnvVars } from "@/lib/utils";
 import { LoadingSpinner } from "@/components/loading-spinner";
 
@@ -78,126 +74,56 @@ async function AdminDashboardContent() {
         </Col>
       </Row>
 
-      <Row gutter={16} style={{ marginBottom: 24 }}>
+      <Row gutter={16}>
         <Col xs={24} lg={12}>
-          <Card title="System Settings">
+          <Card title="Quick Actions" style={{ marginBottom: 24 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ padding: 12, border: "1px solid #f0f0f0", borderRadius: 4 }}>
-                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>General Settings</h3>
+                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>User Management</h3>
                 <p style={{ color: "rgba(0, 0, 0, 0.45)", margin: 0 }}>
-                  Configure system preferences and defaults
+                  Create and manage user accounts
                 </p>
               </div>
               <div style={{ padding: 12, border: "1px solid #f0f0f0", borderRadius: 4 }}>
-                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>Security Settings</h3>
+                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>Asset Categories</h3>
                 <p style={{ color: "rgba(0, 0, 0, 0.45)", margin: 0 }}>
-                  Manage security policies and access controls
+                  Organize assets by categories
+                </p>
+              </div>
+              <div style={{ padding: 12, border: "1px solid #f0f0f0", borderRadius: 4 }}>
+                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>Departments</h3>
+                <p style={{ color: "rgba(0, 0, 0, 0.45)", margin: 0 }}>
+                  Manage organizational departments
+                </p>
+              </div>
+              <div style={{ padding: 12, border: "1px solid #f0f0f0", borderRadius: 4 }}>
+                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>Manage Assets</h3>
+                <p style={{ color: "rgba(0, 0, 0, 0.45)", margin: 0 }}>
+                  View and delete assets from the system
                 </p>
               </div>
             </div>
           </Card>
         </Col>
         <Col xs={24} lg={12}>
-          <Card title="Analytics & Reports">
+          <Card title="System Overview" style={{ marginBottom: 24 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ padding: 12, border: "1px solid #f0f0f0", borderRadius: 4 }}>
-                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>User Analytics</h3>
+                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>Database Status</h3>
                 <p style={{ color: "rgba(0, 0, 0, 0.45)", margin: 0 }}>
-                  View user activity and engagement metrics
+                  All systems operational
                 </p>
               </div>
               <div style={{ padding: 12, border: "1px solid #f0f0f0", borderRadius: 4 }}>
-                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>System Reports</h3>
+                <h3 style={{ fontWeight: 600, marginBottom: 4 }}>Security</h3>
                 <p style={{ color: "rgba(0, 0, 0, 0.45)", margin: 0 }}>
-                  Generate and export system reports
+                  Row Level Security (RLS) enabled
                 </p>
               </div>
             </div>
           </Card>
         </Col>
       </Row>
-
-      <Tabs
-        defaultActiveKey="1"
-        items={[
-          {
-            key: "1",
-            label: "User Management",
-            children: (
-              <Card
-                title={
-                  <span>
-                    Create New User <Badge count="Admin Only" style={{ backgroundColor: "#20b2aa" }} />
-                  </span>
-                }
-                style={{ borderColor: "#20b2aa" }}
-              >
-                <p style={{ color: "rgba(0, 0, 0, 0.45)", marginBottom: 16 }}>
-                  Create and manage users in the system
-                </p>
-                <CreateUserForm />
-              </Card>
-            ),
-          },
-          {
-            key: "2",
-            label: "Asset Categories",
-            children: (
-              <Card
-                title={
-                  <span>
-                    Create Asset Category <Badge count="Admin Only" style={{ backgroundColor: "#20b2aa" }} />
-                  </span>
-                }
-                style={{ borderColor: "#20b2aa" }}
-              >
-                <p style={{ color: "rgba(0, 0, 0, 0.45)", marginBottom: 16 }}>
-                  Create new asset categories to organize your assets
-                </p>
-                <CreateCategoryForm />
-              </Card>
-            ),
-          },
-          {
-            key: "3",
-            label: "Departments",
-            children: (
-              <Card
-                title={
-                  <span>
-                    Create Department <Badge count="Admin Only" style={{ backgroundColor: "#20b2aa" }} />
-                  </span>
-                }
-                style={{ borderColor: "#20b2aa" }}
-              >
-                <p style={{ color: "rgba(0, 0, 0, 0.45)", marginBottom: 16 }}>
-                  Create new departments for organizational structure
-                </p>
-                <CreateDepartmentForm />
-              </Card>
-            ),
-          },
-          {
-            key: "4",
-            label: "Manage Assets",
-            children: (
-              <Card
-                title={
-                  <span>
-                    Delete Assets <Badge count="Admin Only" style={{ backgroundColor: "#20b2aa" }} />
-                  </span>
-                }
-                style={{ borderColor: "#20b2aa" }}
-              >
-                <p style={{ color: "rgba(0, 0, 0, 0.45)", marginBottom: 16 }}>
-                  View and delete existing assets from the system
-                </p>
-                <ManageAssets />
-              </Card>
-            ),
-          },
-        ]}
-      />
     </AdminDashboardLayout>
   );
 }
