@@ -9,8 +9,9 @@ import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
+import { CreateUserForm } from "@/components/create-user-form";
 
-async function DashboardContent() {
+async function AdminDashboardContent() {
   if (!hasEnvVars) {
     redirect("/auth/login");
   }
@@ -26,41 +27,41 @@ async function DashboardContent() {
   const userRole = (user.user_metadata?.role as string) || "user";
   const isAdmin = userRole === "admin";
 
-  // Redirect admins to admin dashboard
-  if (isAdmin) {
-    redirect("/admin");
+  // Redirect non-admins to user dashboard
+  if (!isAdmin) {
+    redirect("/");
   }
 
   return (
     <div className="flex-1 w-full flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">User Dashboard</h1>
+          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground mt-1">
             Welcome back, {user.email}
           </p>
         </div>
-        <Badge variant="secondary">User</Badge>
+        <Badge variant="default">Admin</Badge>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>My Assets</CardTitle>
-            <CardDescription>Your assigned assets</CardDescription>
+            <CardTitle>Total Assets</CardTitle>
+            <CardDescription>All assets in the system</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">1,234</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Pending Requests</CardTitle>
-            <CardDescription>Your pending requests</CardDescription>
+            <CardTitle>Total Users</CardTitle>
+            <CardDescription>All users in the system</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-2xl font-bold">42</div>
           </CardContent>
         </Card>
 
@@ -70,31 +71,78 @@ async function DashboardContent() {
             <CardDescription>Last 24 hours</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
+            <div className="text-2xl font-bold">89</div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="mt-4">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Recent Items</CardTitle>
-            <CardDescription>Your recently accessed items</CardDescription>
+            <CardTitle>System Settings</CardTitle>
+            <CardDescription>Manage system-wide configurations</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              <div className="p-3 border rounded-lg">Item #1 - Last accessed 2 hours ago</div>
-              <div className="p-3 border rounded-lg">Item #2 - Last accessed 5 hours ago</div>
-              <div className="p-3 border rounded-lg">Item #3 - Last accessed 1 day ago</div>
+              <div className="p-3 border rounded-lg">
+                <h3 className="font-semibold mb-2">General Settings</h3>
+                <p className="text-sm text-muted-foreground">
+                  Configure system preferences and defaults
+                </p>
+              </div>
+              <div className="p-3 border rounded-lg">
+                <h3 className="font-semibold mb-2">Security Settings</h3>
+                <p className="text-sm text-muted-foreground">
+                  Manage security policies and access controls
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Analytics & Reports</CardTitle>
+            <CardDescription>View system analytics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="p-3 border rounded-lg">
+                <h3 className="font-semibold mb-2">User Analytics</h3>
+                <p className="text-sm text-muted-foreground">
+                  View user activity and engagement metrics
+                </p>
+              </div>
+              <div className="p-3 border rounded-lg">
+                <h3 className="font-semibold mb-2">System Reports</h3>
+                <p className="text-sm text-muted-foreground">
+                  Generate and export system reports
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <Card className="border-primary">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            User Management
+            <Badge variant="default">Admin Only</Badge>
+          </CardTitle>
+          <CardDescription>
+            Create and manage users in the system
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CreateUserForm />
+        </CardContent>
+      </Card>
     </div>
   );
 }
 
-export default function Home() {
+export default function AdminPage() {
   return (
     <main className="min-h-screen flex flex-col items-center">
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
@@ -117,7 +165,7 @@ export default function Home() {
         </nav>
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           <Suspense fallback={<div>Loading...</div>}>
-            <DashboardContent />
+            <AdminDashboardContent />
           </Suspense>
         </div>
 
@@ -139,3 +187,4 @@ export default function Home() {
     </main>
   );
 }
+

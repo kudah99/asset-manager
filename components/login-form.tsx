@@ -35,14 +35,18 @@ export function LoginForm({
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
+      
+      // Get user role and redirect accordingly
+      const userRole = data.user?.user_metadata?.role || "user";
+      const redirectPath = userRole === "admin" ? "/admin" : "/";
+      
       toast.success("Login successful! Redirecting...");
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
+      router.push(redirectPath);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
       setError(errorMessage);
@@ -104,15 +108,6 @@ export function LoginForm({
                   "Login"
                 )}
               </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="underline underline-offset-4"
-              >
-                Sign up
-              </Link>
             </div>
           </form>
         </CardContent>
