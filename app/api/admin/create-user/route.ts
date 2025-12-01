@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { sendEmail, createUserCredentialsEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -53,12 +54,31 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
+    // Send email with credentials to the user
+    const loginUrl = process.env.NEXT_PUBLIC_APP_URL 
+      ? `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`
+      : "http://localhost:3000/auth/login";
+    
+    const emailHtml = createUserCredentialsEmail(email, password, loginUrl);
+    const emailResult = await sendEmail({
+      to: email,
+      subject: "Your Asset Manager Account Credentials",
+      html: emailHtml,
+    });
+
+    // Log email result but don't fail user creation if email fails
+    if (!emailResult.success) {
+      console.warn("⚠️  User created but email failed to send:", emailResult.error);
+    }
+
     return NextResponse.json({ 
       success: true, 
       user: { 
         id: data.user.id, 
         email: data.user.email 
-      } 
+      },
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? undefined : emailResult.error
     });
   } catch (error) {
     console.error("Error creating user:", error);

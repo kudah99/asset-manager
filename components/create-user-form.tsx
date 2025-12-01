@@ -30,7 +30,16 @@ export function CreateUserForm({ onSuccess }: CreateUserFormProps) {
         throw new Error(data.error || "Failed to create user");
       }
 
-      toast.success("User created successfully!");
+      if (data.emailSent) {
+        toast.success("User created successfully! Credentials have been sent via email.");
+      } else {
+        toast.success("User created successfully!", {
+          description: data.emailError 
+            ? `Note: Email notification failed (${data.emailError}). User can still login with the provided credentials.`
+            : "Note: Email notification is not configured. User can still login with the provided credentials.",
+        });
+      }
+      
       form.resetFields();
       if (onSuccess) {
         onSuccess();

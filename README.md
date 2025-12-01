@@ -22,9 +22,25 @@ POSTGRES_HOST=your_postgres_host
 POSTGRES_USER=postgres
 POSTGRES_DATABASE=postgres
 POSTGRES_PASSWORD=your_postgres_password
+
+# Email Configuration (Gmail SMTP) - Optional but recommended
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+SMTP_FROM=your-email@gmail.com
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 Get these values from your [Supabase Dashboard](https://supabase.com/dashboard/project/_/settings/api).
+
+**Email Configuration (Gmail SMTP):**
+- For Gmail, you need to use an [App Password](https://support.google.com/accounts/answer/185833) instead of your regular password
+- Go to Google Account > Security > 2-Step Verification > App passwords
+- Generate an app password for "Mail" and use it as `SMTP_PASSWORD`
+- Set `SMTP_FROM` to your Gmail address
+- Set `NEXT_PUBLIC_APP_URL` to your application URL (e.g., `https://yourdomain.com` for production)
 
 ### 2. Database Setup
 

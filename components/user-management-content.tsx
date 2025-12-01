@@ -66,7 +66,7 @@ export function UserManagementContent() {
         width={500}
       >
         <p style={{ color: "rgba(0, 0, 0, 0.45)", marginBottom: 16 }}>
-          Create new user accounts with email and password. Users will be able to login immediately after creation.
+          Create new user accounts with email and password. Users will receive their login credentials via email and will be able to login immediately after creation.
         </p>
         <CreateUserForm onSuccess={handleUserCreated} />
       </Modal>
