@@ -44,11 +44,7 @@ CREATE POLICY "Admins can manage categories"
   ON asset_categories
   FOR ALL
   USING (
-    EXISTS (
-      SELECT 1 FROM auth.users
-      WHERE auth.users.id = auth.uid()
-      AND (auth.users.raw_user_meta_data->>'role')::text = 'admin'
-    )
+    (auth.jwt() -> 'user_metadata' ->> 'role')::text = 'admin'
   );
 
 -- Allow all authenticated users to read categories
@@ -63,11 +59,7 @@ CREATE POLICY "Admins can manage departments"
   ON departments
   FOR ALL
   USING (
-    EXISTS (
-      SELECT 1 FROM auth.users
-      WHERE auth.users.id = auth.uid()
-      AND (auth.users.raw_user_meta_data->>'role')::text = 'admin'
-    )
+    (auth.jwt() -> 'user_metadata' ->> 'role')::text = 'admin'
   );
 
 -- Allow all authenticated users to read departments
@@ -82,11 +74,7 @@ CREATE POLICY "Admins can manage assets"
   ON assets
   FOR ALL
   USING (
-    EXISTS (
-      SELECT 1 FROM auth.users
-      WHERE auth.users.id = auth.uid()
-      AND (auth.users.raw_user_meta_data->>'role')::text = 'admin'
-    )
+    (auth.jwt() -> 'user_metadata' ->> 'role')::text = 'admin'
   );
 
 -- Allow all authenticated users to read assets

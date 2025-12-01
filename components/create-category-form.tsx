@@ -5,7 +5,11 @@ import { Button, Input, Form, message } from "antd";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
-export function CreateCategoryForm() {
+interface CreateCategoryFormProps {
+  onSuccess?: () => void;
+}
+
+export function CreateCategoryForm({ onSuccess }: CreateCategoryFormProps) {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,6 +33,9 @@ export function CreateCategoryForm() {
 
       toast.success("Asset category created successfully!");
       form.resetFields();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
       toast.error(errorMessage);

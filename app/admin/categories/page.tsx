@@ -2,12 +2,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 import { AdminDashboardLayout } from "@/components/admin-dashboard-layout";
-import { Card, Badge } from "antd";
-import { CreateCategoryForm } from "@/components/create-category-form";
+import { AssetCategoriesContent } from "@/components/asset-categories-content";
 import { hasEnvVars } from "@/lib/utils";
 import { LoadingSpinner } from "@/components/loading-spinner";
 
-async function AssetCategoriesContent() {
+async function AssetCategoriesPageContent() {
   if (!hasEnvVars) {
     redirect("/auth/login");
   }
@@ -30,33 +29,7 @@ async function AssetCategoriesContent() {
 
   return (
     <AdminDashboardLayout userEmail={user.email as string}>
-      <div style={{ marginBottom: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 8 }}>
-              Asset Categories
-            </h1>
-            <p style={{ color: "rgba(0, 0, 0, 0.45)" }}>
-              Create and manage asset categories to organize your assets
-            </p>
-          </div>
-          <Badge status="success" text="Admin Only" />
-        </div>
-      </div>
-
-      <Card
-        title={
-          <span>
-            Create Asset Category <Badge count="Admin Only" style={{ backgroundColor: "#20b2aa" }} />
-          </span>
-        }
-        style={{ borderColor: "#20b2aa" }}
-      >
-        <p style={{ color: "rgba(0, 0, 0, 0.45)", marginBottom: 16 }}>
-          Create new asset categories to help organize and classify assets in your system.
-        </p>
-        <CreateCategoryForm />
-      </Card>
+      <AssetCategoriesContent />
     </AdminDashboardLayout>
   );
 }
@@ -64,7 +37,7 @@ async function AssetCategoriesContent() {
 export default function AssetCategoriesPage() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <AssetCategoriesContent />
+      <AssetCategoriesPageContent />
     </Suspense>
   );
 }

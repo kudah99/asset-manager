@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "eslint .",
     "create-admin": "tsx scripts/create-admin.ts",
-    "setup-database": "tsx scripts/setup-database.ts"
+    "setup-database": "tsx scripts/setup-database.ts",
+    "fix-rls-policies": "tsx scripts/fix-rls-policies.ts"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",

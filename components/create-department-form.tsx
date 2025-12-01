@@ -4,7 +4,11 @@ import { useState } from "react";
 import { Button, Input, Form } from "antd";
 import { toast } from "sonner";
 
-export function CreateDepartmentForm() {
+interface CreateDepartmentFormProps {
+  onSuccess?: () => void;
+}
+
+export function CreateDepartmentForm({ onSuccess }: CreateDepartmentFormProps) {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +32,9 @@ export function CreateDepartmentForm() {
 
       toast.success("Department created successfully!");
       form.resetFields();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
       toast.error(errorMessage);
