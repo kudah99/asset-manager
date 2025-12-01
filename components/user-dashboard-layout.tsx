@@ -12,7 +12,6 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ThemeSwitcher } from "./theme-switcher";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -124,7 +123,6 @@ export function UserDashboardLayout({
         >
           <div style={{ flex: 1 }} />
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <ThemeSwitcher />
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div
                 style={{
