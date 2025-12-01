@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Suspense } from "react";
+import { LoadingSpinner } from "@/components/loading-spinner";
 
 async function DashboardContent() {
   const supabase = await createClient();
@@ -121,7 +122,7 @@ async function DashboardContent() {
 
 export default function ProtectedPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <DashboardContent />
     </Suspense>
   );

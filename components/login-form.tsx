@@ -2,42 +2,31 @@
 
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button, Input, Form, Card, Typography } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+
+const { Title, Text } = Typography;
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (values: { email: string; password: string }) => {
     const supabase = createClient();
     setIsLoading(true);
-    setError(null);
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: values.email,
+        password: values.password,
       });
       if (error) throw error;
       
@@ -49,7 +38,6 @@ export function LoginForm({
       router.push(redirectPath);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
-      setError(errorMessage);
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -59,58 +47,68 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/auth/forgot-password"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Logging in...
-                  </>
-                ) : (
-                  "Login"
-                )}
-              </Button>
+        <div style={{ marginBottom: 32, textAlign: "center" }}>
+          <Title level={2} style={{ marginBottom: 8, fontWeight: 600 }}>
+            Welcome Back
+          </Title>
+          <Text type="secondary" style={{ fontSize: 15 }}>
+            Sign in to continue to Asset Manager
+          </Text>
+        </div>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleLogin}
+          autoComplete="off"
+          size="large"
+        >
+          <Form.Item
+            label="Email Address"
+            name="email"
+            rules={[
+              { required: true, message: "Please enter your email" },
+              { type: "email", message: "Please enter a valid email" },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Enter your email"
+            />
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              { required: true, message: "Please enter your password" },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Enter your password"
+            />
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Link
+                href="/auth/forgot-password"
+                style={{ fontSize: 14,color: "#20b2aa" }}
+              >
+                Forgot password?
+              </Link>
             </div>
-          </form>
-        </CardContent>
+          </Form.Item>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isLoading}
+              block
+              size="large"
+            >
+              Sign In
+            </Button>
+          </Form.Item>
+        </Form>
       </Card>
     </div>
   );

@@ -8,6 +8,7 @@ import { CreateCategoryForm } from "@/components/create-category-form";
 import { CreateDepartmentForm } from "@/components/create-department-form";
 import { ManageAssets } from "@/components/manage-assets";
 import { hasEnvVars } from "@/lib/utils";
+import { LoadingSpinner } from "@/components/loading-spinner";
 
 async function AdminDashboardContent() {
   if (!hasEnvVars) {
@@ -203,7 +204,7 @@ async function AdminDashboardContent() {
 
 export default function AdminPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <AdminDashboardContent />
     </Suspense>
   );

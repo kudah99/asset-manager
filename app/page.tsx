@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 import { hasEnvVars } from "@/lib/utils";
 import { UserDashboardContent } from "@/components/user-dashboard-content";
+import { LoadingSpinner } from "@/components/loading-spinner";
 
 async function DashboardContent() {
   if (!hasEnvVars) {
@@ -30,7 +31,7 @@ async function DashboardContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <DashboardContent />
     </Suspense>
   );

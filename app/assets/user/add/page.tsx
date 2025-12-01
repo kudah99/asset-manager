@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 import { hasEnvVars } from "@/lib/utils";
 import { AddAssetPageContent } from "@/components/add-asset-page-content";
+import { LoadingSpinner } from "@/components/loading-spinner";
 
 async function AddAssetPage() {
   if (!hasEnvVars) {
@@ -30,7 +31,7 @@ async function AddAssetPage() {
 
 export default function AddAssetPageRoute() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <AddAssetPage />
     </Suspense>
   );

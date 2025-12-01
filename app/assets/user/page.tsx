@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 import { hasEnvVars } from "@/lib/utils";
 import { MyAssetsPageContent } from "@/components/my-assets-page-content";
+import { LoadingSpinner } from "@/components/loading-spinner";
 
 async function MyAssetsPage() {
   if (!hasEnvVars) {
@@ -30,7 +31,7 @@ async function MyAssetsPage() {
 
 export default function AssetsPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <MyAssetsPage />
     </Suspense>
   );

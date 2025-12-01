@@ -5,6 +5,7 @@ const theme: ThemeConfig = {
     fontSize: 14,
     colorPrimary: "#20b2aa", // Teal color
     borderRadius: 6,
+    fontFamily: "var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
   },
   components: {
     Button: {
