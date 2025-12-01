@@ -1,36 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Form } from "antd";
 import { toast } from "sonner";
 
 interface CreateDepartmentFormProps {
   onSuccess?: () => void;
+  departmentId?: string;
+  initialValues?: {
+    name: string;
+    description?: string;
+  };
 }
 
-export function CreateDepartmentForm({ onSuccess }: CreateDepartmentFormProps) {
+export function CreateDepartmentForm({ onSuccess, departmentId, initialValues }: CreateDepartmentFormProps) {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const isEditMode = !!departmentId;
 
-  const handleCreateDepartment = async (values: { name: string; description?: string }) => {
+  // Set initial values when editing
+  React.useEffect(() => {
+    if (initialValues) {
+      form.setFieldsValue(initialValues);
+    }
+  }, [initialValues, form]);
+
+  const handleSubmit = async (values: { name: string; description?: string }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/admin/create-department", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      let response;
+      if (isEditMode) {
+        // Update existing department
+        response = await fetch(`/api/admin/departments/${departmentId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+      } else {
+        // Create new department
+        response = await fetch("/api/admin/create-department", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+      }
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create department");
+        throw new Error(data.error || `Failed to ${isEditMode ? "update" : "create"} department`);
       }
 
-      toast.success("Department created successfully!");
+      toast.success(`Department ${isEditMode ? "updated" : "created"} successfully!`);
       form.resetFields();
       if (onSuccess) {
         onSuccess();
@@ -47,7 +73,7 @@ export function CreateDepartmentForm({ onSuccess }: CreateDepartmentFormProps) {
     <Form
       form={form}
       layout="vertical"
-      onFinish={handleCreateDepartment}
+      onFinish={handleSubmit}
       autoComplete="off"
     >
       <Form.Item
@@ -68,7 +94,7 @@ export function CreateDepartmentForm({ onSuccess }: CreateDepartmentFormProps) {
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={isLoading} block>
-          Create Department
+          {isEditMode ? "Update Department" : "Create Department"}
         </Button>
       </Form.Item>
     </Form>

@@ -1,37 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Form, message } from "antd";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 interface CreateCategoryFormProps {
   onSuccess?: () => void;
+  categoryId?: string;
+  initialValues?: {
+    name: string;
+    description?: string;
+  };
 }
 
-export function CreateCategoryForm({ onSuccess }: CreateCategoryFormProps) {
+export function CreateCategoryForm({ onSuccess, categoryId, initialValues }: CreateCategoryFormProps) {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const isEditMode = !!categoryId;
 
-  const handleCreateCategory = async (values: { name: string; description?: string }) => {
+  // Set initial values when editing
+  React.useEffect(() => {
+    if (initialValues) {
+      form.setFieldsValue(initialValues);
+    }
+  }, [initialValues, form]);
+
+  const handleSubmit = async (values: { name: string; description?: string }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/admin/create-category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      let response;
+      if (isEditMode) {
+        // Update existing category
+        response = await fetch(`/api/admin/categories/${categoryId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+      } else {
+        // Create new category
+        response = await fetch("/api/admin/create-category", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+      }
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create category");
+        throw new Error(data.error || `Failed to ${isEditMode ? "update" : "create"} category`);
       }
 
-      toast.success("Asset category created successfully!");
+      toast.success(`Asset category ${isEditMode ? "updated" : "created"} successfully!`);
       form.resetFields();
       if (onSuccess) {
         onSuccess();
@@ -48,7 +74,7 @@ export function CreateCategoryForm({ onSuccess }: CreateCategoryFormProps) {
     <Form
       form={form}
       layout="vertical"
-      onFinish={handleCreateCategory}
+      onFinish={handleSubmit}
       autoComplete="off"
     >
       <Form.Item
@@ -69,7 +95,7 @@ export function CreateCategoryForm({ onSuccess }: CreateCategoryFormProps) {
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={isLoading} block>
-          Create Category
+          {isEditMode ? "Update Category" : "Create Category"}
         </Button>
       </Form.Item>
     </Form>
