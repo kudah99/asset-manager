@@ -4,15 +4,15 @@ import { useState } from "react";
 import { Button, Input, Form } from "antd";
 import { toast } from "sonner";
 
-export function CreateUserForm() {
+export function CreateDepartmentForm() {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreateUser = async (values: { email: string; password: string }) => {
+  const handleCreateDepartment = async (values: { name: string; description?: string }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/admin/create-user", {
+      const response = await fetch("/api/admin/create-department", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,10 +23,10 @@ export function CreateUserForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create user");
+        throw new Error(data.error || "Failed to create department");
       }
 
-      toast.success("User created successfully!");
+      toast.success("Department created successfully!");
       form.resetFields();
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred";
@@ -40,32 +40,28 @@ export function CreateUserForm() {
     <Form
       form={form}
       layout="vertical"
-      onFinish={handleCreateUser}
+      onFinish={handleCreateDepartment}
       autoComplete="off"
     >
       <Form.Item
-        label="Email"
-        name="email"
-        rules={[
-          { required: true, message: "Please enter email" },
-          { type: "email", message: "Please enter a valid email" },
-        ]}
+        label="Department Name"
+        name="name"
+        rules={[{ required: true, message: "Please enter department name" }]}
       >
-        <Input placeholder="user@example.com" />
+        <Input placeholder="e.g., IT, HR, Finance, Operations" />
       </Form.Item>
       <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          { required: true, message: "Please enter password" },
-          { min: 6, message: "Password must be at least 6 characters" },
-        ]}
+        label="Description"
+        name="description"
       >
-        <Input.Password placeholder="Password" />
+        <Input.TextArea
+          rows={3}
+          placeholder="Optional description for this department"
+        />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={isLoading} block>
-          Create User
+          Create Department
         </Button>
       </Form.Item>
     </Form>

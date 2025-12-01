@@ -1,15 +1,28 @@
+import { config } from "dotenv";
+import { resolve } from "path";
+import { existsSync } from "fs";
 import { createClient } from "@supabase/supabase-js";
+
+// Load environment variables from .env.local
+const envPath = resolve(process.cwd(), ".env.local");
+if (existsSync(envPath)) {
+  config({ path: envPath });
+} else {
+  console.warn("⚠️  Warning: .env.local file not found. Trying to load from environment...");
+  config(); // Try to load from default .env or environment
+}
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseServiceRoleKey) {
-  console.error("Error: Missing required environment variables");
-  console.error("Please ensure the following are set in your .env.local file:");
+  console.error("\n❌ Error: Missing required environment variables");
+  console.error("\nPlease ensure the following are set in your .env.local file:");
   console.error("  - NEXT_PUBLIC_SUPABASE_URL");
   console.error("  - SUPABASE_SERVICE_ROLE_KEY");
-  console.error("\nYou can find the service role key in your Supabase project settings:");
+  console.error("\nYou can find these values in your Supabase project settings:");
   console.error("  https://supabase.com/dashboard/project/_/settings/api");
+  console.error("\nMake sure your .env.local file exists in the project root.");
   process.exit(1);
 }
 

@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Suspense } from "react";
 import { hasEnvVars } from "@/lib/utils";
-import { UserDashboardContent } from "@/components/user-dashboard-content";
+import { MyAssetsPageContent } from "@/components/my-assets-page-content";
 
-async function DashboardContent() {
+async function MyAssetsPage() {
   if (!hasEnvVars) {
     redirect("/auth/login");
   }
@@ -25,13 +25,14 @@ async function DashboardContent() {
     redirect("/admin");
   }
 
-  return <UserDashboardContent userEmail={user.email as string} />;
+  return <MyAssetsPageContent userEmail={user.email as string} />;
 }
 
-export default function Home() {
+export default function AssetsPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DashboardContent />
+      <MyAssetsPage />
     </Suspense>
   );
 }
+

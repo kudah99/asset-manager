@@ -78,13 +78,20 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
   ```env
   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
+  SUPABASE_SERVICE_ROLE_KEY=[INSERT SUPABASE SERVICE ROLE KEY]
+  POSTGRES_HOST=[INSERT POSTGRES HOST]
+  POSTGRES_USER=postgres
+  POSTGRES_DATABASE=postgres
+  POSTGRES_PASSWORD=[INSERT POSTGRES PASSWORD]
   ```
   > [!NOTE]
   > This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
   > Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
   > See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
 
-  Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+  - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+  - `SUPABASE_SERVICE_ROLE_KEY` is required for admin operations (creating admin users, etc.). Find it in [API settings](https://supabase.com/dashboard/project/_/settings/api)
+  - `POSTGRES_HOST`, `POSTGRES_USER`, `POSTGRES_DATABASE`, `POSTGRES_PASSWORD` are required for database setup scripts. Find them in [Database settings](https://supabase.com/dashboard/project/_/settings/database)
 
 5. You can now run the Next.js local development server:
 
