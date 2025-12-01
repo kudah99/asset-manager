@@ -45,6 +45,9 @@ export function SignUpForm({
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/protected`,
+          data: {
+            role: "user", // Set default role as "user" for sign-ups
+          },
         },
       });
       if (error) throw error;
