@@ -106,7 +106,10 @@ export async function query<T = any>(
     console.warn(`Slow query detected (${duration}ms):`, text);
   }
   
-  return result;
+  return {
+    rows: result.rows,
+    rowCount: result.rowCount ?? 0,
+  };
 }
 
 /**
