@@ -23,7 +23,7 @@ POSTGRES_USER=postgres
 POSTGRES_DATABASE=postgres
 POSTGRES_PASSWORD=your_postgres_password
 
-# Email Configuration (Gmail SMTP) - Optional but recommended
+
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_SECURE=false
