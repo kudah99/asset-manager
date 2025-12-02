@@ -7,6 +7,7 @@
     "lint": "eslint .",
     "create-admin": "tsx scripts/create-admin.ts",
     "setup-database": "tsx scripts/setup-database.ts",
+    "update-database": "tsx scripts/update-database-profile-requests.ts",
     "fix-rls-policies": "tsx scripts/fix-rls-policies.ts"
   },
   "dependencies": {

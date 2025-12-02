@@ -312,3 +312,328 @@ export function createAssetCreatedEmail(assetName: string, category: string, dep
   return html;
 }
 
+export function createProfileUpdateRequestEmail(
+  userEmail: string,
+  currentName: string,
+  requestedEmail: string,
+  requestedName: string,
+  adminDashboardUrl: string
+) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background-color: #20b2aa;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          border-radius: 5px 5px 0 0;
+        }
+        .content {
+          background-color: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 5px 5px;
+        }
+        .request-badge {
+          background-color: #fff3cd;
+          border: 1px solid #ffc107;
+          color: #856404;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 20px 0;
+          text-align: center;
+          font-weight: bold;
+        }
+        .request-details {
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          margin: 20px 0;
+          border-left: 4px solid #20b2aa;
+        }
+        .detail-item {
+          margin: 10px 0;
+          padding: 8px 0;
+          border-bottom: 1px solid #eee;
+        }
+        .detail-item:last-child {
+          border-bottom: none;
+        }
+        .label {
+          font-weight: bold;
+          color: #666;
+          display: inline-block;
+          width: 160px;
+        }
+        .value {
+          color: #333;
+        }
+        .button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #20b2aa;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+        .footer {
+          text-align: center;
+          color: #666;
+          font-size: 12px;
+          margin-top: 30px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>New Profile Update Request</h1>
+      </div>
+      <div class="content">
+        <p>Hello Admin,</p>
+        <p>A user has requested a profile update that requires your approval.</p>
+        
+        <div class="request-badge">
+          ⚠️ Pending Approval Required
+        </div>
+        
+        <div class="request-details">
+          <h3 style="margin-top: 0; color: #20b2aa;">Request Details</h3>
+          <div class="detail-item">
+            <span class="label">User Email:</span>
+            <span class="value">${userEmail}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Current Name:</span>
+            <span class="value">${currentName}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Requested Name:</span>
+            <span class="value">${requestedName}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Current Email:</span>
+            <span class="value">${userEmail}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Requested Email:</span>
+            <span class="value">${requestedEmail}</span>
+          </div>
+        </div>
+
+        <p>Please review and approve or reject this request:</p>
+        <div style="text-align: center;">
+          <a href="${adminDashboardUrl}" class="button">Review Request</a>
+        </div>
+
+        <p>If you have any questions, please contact the user directly.</p>
+      </div>
+      <div class="footer">
+        <p>This is an automated message from Asset Manager. Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return html;
+}
+
+export function createProfileUpdateApprovedEmail(
+  userEmail: string,
+  userName: string,
+  dashboardUrl: string
+) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background-color: #20b2aa;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          border-radius: 5px 5px 0 0;
+        }
+        .content {
+          background-color: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 5px 5px;
+        }
+        .success-badge {
+          background-color: #d4edda;
+          border: 1px solid #c3e6cb;
+          color: #155724;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 20px 0;
+          text-align: center;
+          font-weight: bold;
+        }
+        .button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #20b2aa;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+        .footer {
+          text-align: center;
+          color: #666;
+          font-size: 12px;
+          margin-top: 30px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>Profile Update Approved</h1>
+      </div>
+      <div class="content">
+        <p>Hello ${userName},</p>
+        <p>Your profile update request has been approved and your profile has been updated successfully.</p>
+        
+        <div class="success-badge">
+          ✓ Profile Update Approved
+        </div>
+
+        <p>Your profile information has been updated in the system. You can now log in with your updated information.</p>
+
+        <div style="text-align: center;">
+          <a href="${dashboardUrl}" class="button">Go to Dashboard</a>
+        </div>
+
+        <p>If you have any questions or need assistance, please contact your administrator.</p>
+      </div>
+      <div class="footer">
+        <p>This is an automated message from Asset Manager. Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return html;
+}
+
+export function createProfileUpdateRejectedEmail(
+  userEmail: string,
+  rejectionReason: string,
+  dashboardUrl: string
+) {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background-color: #dc3545;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          border-radius: 5px 5px 0 0;
+        }
+        .content {
+          background-color: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 5px 5px;
+        }
+        .rejection-badge {
+          background-color: #f8d7da;
+          border: 1px solid #f5c6cb;
+          color: #721c24;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 20px 0;
+          text-align: center;
+          font-weight: bold;
+        }
+        .reason-box {
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          margin: 20px 0;
+          border-left: 4px solid #dc3545;
+        }
+        .button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #20b2aa;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+        .footer {
+          text-align: center;
+          color: #666;
+          font-size: 12px;
+          margin-top: 30px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>Profile Update Request Rejected</h1>
+      </div>
+      <div class="content">
+        <p>Hello,</p>
+        <p>Your profile update request has been reviewed and unfortunately, it has been rejected.</p>
+        
+        <div class="rejection-badge">
+          ✗ Profile Update Rejected
+        </div>
+
+        <div class="reason-box">
+          <h3 style="margin-top: 0; color: #dc3545;">Rejection Reason:</h3>
+          <p>${rejectionReason}</p>
+        </div>
+
+        <p>If you believe this is an error or would like to submit a new request, please contact your administrator or submit a new profile update request.</p>
+
+        <div style="text-align: center;">
+          <a href="${dashboardUrl}" class="button">Go to Dashboard</a>
+        </div>
+
+        <p>If you have any questions or need assistance, please contact your administrator.</p>
+      </div>
+      <div class="footer">
+        <p>This is an automated message from Asset Manager. Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return html;
+}
+

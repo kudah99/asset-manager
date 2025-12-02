@@ -11,6 +11,7 @@ import {
   AppstoreOutlined,
   BankOutlined,
   DeleteOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -40,6 +41,7 @@ export function AdminDashboardLayout({
     if (path === "/admin/categories") return "3";
     if (path === "/admin/departments") return "4";
     if (path === "/admin/assets") return "5";
+    if (path === "/admin/profile-requests") return "6";
     return "1";
   };
 
@@ -99,6 +101,12 @@ export function AdminDashboardLayout({
       icon: <DeleteOutlined />,
       label: "Manage Assets",
       onClick: () => router.push("/admin/assets"),
+    },
+    {
+      key: "6",
+      icon: <CheckCircleOutlined />,
+      label: "Approve Profiles",
+      onClick: () => router.push("/admin/profile-requests"),
     },
   ];
 

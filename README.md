@@ -71,13 +71,23 @@ Get these values from your [Supabase Dashboard](https://supabase.com/dashboard/p
 
 ### 2. Database Setup
 
-Run the database setup script:
+Run the database setup script to create initial tables:
 
 ```bash
 npm run setup-database
 ```
 
 This creates all required tables and policies.
+
+#### Update Database for Profile Update Requests
+
+To add the profile update request feature, run:
+
+```bash
+npm run update-database
+```
+
+This creates the `profile_update_requests` table and required policies for the profile update request functionality.
 
 ### 3. Create Admin Account
 
