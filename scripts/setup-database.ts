@@ -9,7 +9,7 @@ const envPath = resolve(process.cwd(), ".env.local");
 if (existsSync(envPath)) {
   config({ path: envPath });
 } else {
-  console.warn("⚠️  Warning: .env.local file not found. Trying to load from environment...");
+  console.warn("  Warning: .env.local file not found. Trying to load from environment...");
   config(); // Try to load from default .env or environment
 }
 

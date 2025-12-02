@@ -9,10 +9,10 @@ import {
   Col,
   Badge,
   Progress,
-  Table,
   Tag,
   Space,
 } from "antd";
+import { AdminRecentAssetsTable } from "@/components/admin-recent-assets-table";
 import {
   DollarOutlined,
   UserOutlined,
@@ -27,7 +27,6 @@ import {
 import { hasEnvVars } from "@/lib/utils";
 import { LoadingSpinner } from "@/components/loading-spinner";
 import { getDashboardStats } from "@/lib/admin-stats";
-import type { ColumnsType } from "antd/es/table";
 
 interface RecentAsset {
   id: string;
@@ -72,49 +71,6 @@ async function AdminDashboardContent() {
   const departmentCounts = stats?.departmentCounts || {};
   const recentAssets: RecentAsset[] = stats?.recentAssets || [];
 
-  // Format currency
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
-  // Recent assets table columns
-  const recentAssetsColumns: ColumnsType<RecentAsset> = [
-    {
-      title: "Asset Name",
-      dataIndex: "name",
-      key: "name",
-      ellipsis: true,
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category: string | null) => (
-        <Tag color="blue">{category || "Uncategorized"}</Tag>
-      ),
-    },
-    {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
-      render: (department: string | null) => (
-        <Tag color="purple">{department || "Unassigned"}</Tag>
-      ),
-    },
-    {
-      title: "Cost",
-      dataIndex: "cost",
-      key: "cost",
-      render: (cost: number | null) =>
-        cost ? formatCurrency(cost) : <span style={{ color: "rgba(0, 0, 0, 0.45)" }}>N/A</span>,
-      align: "right",
-    },
-  ];
 
   // Calculate percentages for distributions
   const getCategoryData = () => {
@@ -186,7 +142,7 @@ async function AdminDashboardContent() {
               background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -195,7 +151,7 @@ async function AdminDashboardContent() {
                 </span>
               }
               value={totalAssets}
-              valueStyle={{ color: "#fff", fontSize: 32, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 32, fontWeight: 600 } }}
               prefix={<ShoppingOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -206,7 +162,7 @@ async function AdminDashboardContent() {
               background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -215,7 +171,7 @@ async function AdminDashboardContent() {
                 </span>
               }
               value={totalUsers}
-              valueStyle={{ color: "#fff", fontSize: 32, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 32, fontWeight: 600 } }}
               prefix={<UserOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -226,7 +182,7 @@ async function AdminDashboardContent() {
               background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -235,7 +191,7 @@ async function AdminDashboardContent() {
                 </span>
               }
               value={formatCurrency(totalValue)}
-              valueStyle={{ color: "#fff", fontSize: 24, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 24, fontWeight: 600 } }}
               prefix={<DollarOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -246,7 +202,7 @@ async function AdminDashboardContent() {
               background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -260,7 +216,7 @@ async function AdminDashboardContent() {
                   last 24h
                 </span>
               }
-              valueStyle={{ color: "#fff", fontSize: 32, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 32, fontWeight: 600 } }}
               prefix={<ThunderboltOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -275,7 +231,7 @@ async function AdminDashboardContent() {
               title="Categories"
               value={totalCategories}
               prefix={<AppstoreOutlined style={{ color: "#667eea" }} />}
-              valueStyle={{ color: "#667eea" }}
+              styles={{ content: { color: "#667eea" } }}
             />
           </Card>
         </Col>
@@ -285,7 +241,7 @@ async function AdminDashboardContent() {
               title="Departments"
               value={totalDepartments}
               prefix={<BankOutlined style={{ color: "#f5576c" }} />}
-              valueStyle={{ color: "#f5576c" }}
+              styles={{ content: { color: "#f5576c" } }}
             />
           </Card>
         </Col>
@@ -295,7 +251,7 @@ async function AdminDashboardContent() {
               title="Active Assets"
               value={statusCounts.active || 0}
               prefix={<CheckCircleOutlined style={{ color: "#52c41a" }} />}
-              valueStyle={{ color: "#52c41a" }}
+              styles={{ content: { color: "#52c41a" } }}
             />
           </Card>
         </Col>
@@ -305,7 +261,7 @@ async function AdminDashboardContent() {
               title="In Maintenance"
               value={statusCounts.maintenance || 0}
               prefix={<WarningOutlined style={{ color: "#faad14" }} />}
-              valueStyle={{ color: "#faad14" }}
+              styles={{ content: { color: "#faad14" } }}
             />
           </Card>
         </Col>
@@ -324,7 +280,7 @@ async function AdminDashboardContent() {
             style={{ height: "100%" }}
           >
             {Object.entries(statusCounts).length > 0 ? (
-              <Space direction="vertical" style={{ width: "100%" }} size="large">
+              <Space orientation="vertical" style={{ width: "100%" }} size="large">
                 {Object.entries(statusCounts).map(([status, count]) => {
                   const percent = totalAssets > 0 ? Math.round((count / totalAssets) * 100) : 0;
                   return (
@@ -368,7 +324,7 @@ async function AdminDashboardContent() {
             style={{ height: "100%" }}
           >
             {categoryData.length > 0 ? (
-              <Space direction="vertical" style={{ width: "100%" }} size="large">
+              <Space orientation="vertical" style={{ width: "100%" }} size="large">
                 {categoryData.map((item) => (
                   <div key={item.name}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -397,7 +353,7 @@ async function AdminDashboardContent() {
             style={{ height: "100%" }}
           >
             {departmentData.length > 0 ? (
-              <Space direction="vertical" style={{ width: "100%" }} size="large">
+              <Space orientation="vertical" style={{ width: "100%" }} size="large">
                 {departmentData.map((item) => (
                   <div key={item.name}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -427,13 +383,7 @@ async function AdminDashboardContent() {
             }
           >
             {recentAssets.length > 0 ? (
-              <Table
-                columns={recentAssetsColumns}
-                dataSource={recentAssets}
-                rowKey="id"
-                pagination={false}
-                size="small"
-              />
+              <AdminRecentAssetsTable assets={recentAssets} />
             ) : (
               <span style={{ color: "rgba(0, 0, 0, 0.45)" }}>No recent assets in the last 24 hours</span>
             )}

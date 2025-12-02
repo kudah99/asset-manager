@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Tag, Button, Space } from "antd";
+import { Table, Tag, Button, Space, Dropdown } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { ReloadOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { ReloadOutlined, DownloadOutlined, FileExcelOutlined, FileTextOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
+import { exportToExcel, exportToCSV } from "@/lib/export";
 
 interface Asset {
   id: string;
@@ -67,6 +69,39 @@ export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
     }
   };
 
+  const handleExportExcel = () => {
+    const result = exportToExcel(assets, "my-assets");
+    if (result.success) {
+      toast.success("Assets exported to Excel successfully!");
+    } else {
+      toast.error(`Export failed: ${result.error}`);
+    }
+  };
+
+  const handleExportCSV = () => {
+    const result = exportToCSV(assets, "my-assets");
+    if (result.success) {
+      toast.success("Assets exported to CSV successfully!");
+    } else {
+      toast.error(`Export failed: ${result.error}`);
+    }
+  };
+
+  const exportMenuItems: MenuProps["items"] = [
+    {
+      key: "excel",
+      label: "Export to Excel",
+      icon: <FileExcelOutlined />,
+      onClick: handleExportExcel,
+    },
+    {
+      key: "csv",
+      label: "Export to CSV",
+      icon: <FileTextOutlined />,
+      onClick: handleExportCSV,
+    },
+  ];
+
   const columns: ColumnsType<Asset> = [
     {
       title: "Name",
@@ -120,9 +155,16 @@ export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
           justifyContent: "flex-end",
         }}
       >
-        <Button icon={<ReloadOutlined />} onClick={fetchAssets} loading={loading}>
-          Refresh
-        </Button>
+        <Space>
+          <Dropdown menu={{ items: exportMenuItems }} placement="bottomRight">
+            <Button icon={<DownloadOutlined />} loading={loading}>
+              Export
+            </Button>
+          </Dropdown>
+          <Button icon={<ReloadOutlined />} onClick={fetchAssets} loading={loading}>
+            Refresh
+          </Button>
+        </Space>
       </div>
       <Table
         columns={columns}

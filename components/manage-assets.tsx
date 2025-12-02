@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Table, Button, Popconfirm, Space, message } from "antd";
+import { Table, Button, Popconfirm, Space, Dropdown } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { DeleteOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { DeleteOutlined, DownloadOutlined, FileExcelOutlined, FileTextOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
+import { exportToExcel, exportToCSV } from "@/lib/export";
 
 interface Asset {
   id: string;
@@ -62,6 +64,39 @@ export function ManageAssets() {
       toast.error(errorMessage);
     }
   };
+
+  const handleExportExcel = () => {
+    const result = exportToExcel(assets, "assets");
+    if (result.success) {
+      toast.success("Assets exported to Excel successfully!");
+    } else {
+      toast.error(`Export failed: ${result.error}`);
+    }
+  };
+
+  const handleExportCSV = () => {
+    const result = exportToCSV(assets, "assets");
+    if (result.success) {
+      toast.success("Assets exported to CSV successfully!");
+    } else {
+      toast.error(`Export failed: ${result.error}`);
+    }
+  };
+
+  const exportMenuItems: MenuProps["items"] = [
+    {
+      key: "excel",
+      label: "Export to Excel",
+      icon: <FileExcelOutlined />,
+      onClick: handleExportExcel,
+    },
+    {
+      key: "csv",
+      label: "Export to CSV",
+      icon: <FileTextOutlined />,
+      onClick: handleExportCSV,
+    },
+  ];
 
   const columns: ColumnsType<Asset> = [
     {
@@ -133,9 +168,16 @@ export function ManageAssets() {
     <div>
       <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h3 style={{ margin: 0 }}>Manage Assets</h3>
-        <Button onClick={fetchAssets} loading={loading}>
-          Refresh
-        </Button>
+        <Space>
+          <Dropdown menu={{ items: exportMenuItems }} placement="bottomRight">
+            <Button icon={<DownloadOutlined />} loading={loading}>
+              Export
+            </Button>
+          </Dropdown>
+          <Button onClick={fetchAssets} loading={loading}>
+            Refresh
+          </Button>
+        </Space>
       </div>
       <Table
         columns={columns}

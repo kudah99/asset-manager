@@ -6,7 +6,6 @@ import {
   Col,
   Button,
   Progress,
-  Table,
   Tag,
   Space,
   Badge,
@@ -25,7 +24,7 @@ import {
 } from "@ant-design/icons";
 import { getUserDashboardStats } from "@/lib/user-stats";
 import Link from "next/link";
-import type { ColumnsType } from "antd/es/table";
+import { RecentAssetsTable } from "@/components/recent-assets-table";
 
 interface RecentAsset {
   id: string;
@@ -57,41 +56,6 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
       maximumFractionDigits: 0,
     }).format(value);
   };
-
-  // Recent assets table columns
-  const recentAssetsColumns: ColumnsType<RecentAsset> = [
-    {
-      title: "Asset Name",
-      dataIndex: "name",
-      key: "name",
-      ellipsis: true,
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category: string | null) => (
-        <Tag color="blue">{category || "Uncategorized"}</Tag>
-      ),
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: string | null) => {
-        const statusColor = getStatusColor(status || "active");
-        return <Tag color={statusColor}>{status || "active"}</Tag>;
-      },
-    },
-    {
-      title: "Cost",
-      dataIndex: "cost",
-      key: "cost",
-      render: (cost: number | null) =>
-        cost ? formatCurrency(cost) : <span style={{ color: "rgba(0, 0, 0, 0.45)" }}>N/A</span>,
-      align: "right",
-    },
-  ];
 
   // Calculate percentages for distributions
   const getCategoryData = () => {
@@ -148,8 +112,8 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               My Dashboard
             </h2>
             <p style={{ color: "rgba(0, 0, 0, 0.45)", fontSize: 16, margin: 0 }}>
-              Welcome back, {userEmail}
-            </p>
+          Welcome back, {userEmail}
+        </p>
           </div>
           <Badge status="processing" text={<strong>User</strong>} />
         </div>
@@ -163,7 +127,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -172,7 +136,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
                 </span>
               }
               value={totalAssets}
-              valueStyle={{ color: "#fff", fontSize: 32, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 32, fontWeight: 600 } }}
               prefix={<ShoppingOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -183,7 +147,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -192,7 +156,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
                 </span>
               }
               value={formatCurrency(totalValue)}
-              valueStyle={{ color: "#fff", fontSize: 24, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 24, fontWeight: 600 } }}
               prefix={<DollarOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -203,7 +167,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
               border: "none",
             }}
-            bodyStyle={{ padding: 24 }}
+            styles={{ body: { padding: 24 } }}
           >
             <Statistic
               title={
@@ -217,7 +181,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
                   last 24h
                 </span>
               }
-              valueStyle={{ color: "#fff", fontSize: 32, fontWeight: 600 }}
+              styles={{ content: { color: "#fff", fontSize: 32, fontWeight: 600 } }}
               prefix={<ThunderboltOutlined style={{ color: "rgba(255, 255, 255, 0.85)" }} />}
             />
           </Card>
@@ -232,7 +196,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               title="Active Assets"
               value={statusCounts.active || 0}
               prefix={<CheckCircleOutlined style={{ color: "#52c41a" }} />}
-              valueStyle={{ color: "#52c41a" }}
+              styles={{ content: { color: "#52c41a" } }}
             />
           </Card>
         </Col>
@@ -242,7 +206,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               title="In Maintenance"
               value={statusCounts.maintenance || 0}
               prefix={<WarningOutlined style={{ color: "#faad14" }} />}
-              valueStyle={{ color: "#faad14" }}
+              styles={{ content: { color: "#faad14" } }}
             />
           </Card>
         </Col>
@@ -252,7 +216,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               title="Categories"
               value={Object.keys(categoryCounts).length}
               prefix={<AppstoreOutlined style={{ color: "#667eea" }} />}
-              valueStyle={{ color: "#667eea" }}
+              styles={{ content: { color: "#667eea" } }}
             />
           </Card>
         </Col>
@@ -262,7 +226,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
               title="Departments"
               value={Object.keys(departmentCounts).length}
               prefix={<BankOutlined style={{ color: "#f5576c" }} />}
-              valueStyle={{ color: "#f5576c" }}
+              styles={{ content: { color: "#f5576c" } }}
             />
           </Card>
         </Col>
@@ -281,7 +245,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
             style={{ height: "100%" }}
           >
             {Object.entries(statusCounts).length > 0 ? (
-              <Space direction="vertical" style={{ width: "100%" }} size="large">
+              <Space orientation="vertical" style={{ width: "100%" }} size="large">
                 {Object.entries(statusCounts).map(([status, count]) => {
                   const percent = totalAssets > 0 ? Math.round((count / totalAssets) * 100) : 0;
                   return (
@@ -325,7 +289,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
             style={{ height: "100%" }}
           >
             {categoryData.length > 0 ? (
-              <Space direction="vertical" style={{ width: "100%" }} size="large">
+              <Space orientation="vertical" style={{ width: "100%" }} size="large">
                 {categoryData.map((item) => (
                   <div key={item.name}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -354,7 +318,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
             style={{ height: "100%" }}
           >
             {departmentData.length > 0 ? (
-              <Space direction="vertical" style={{ width: "100%" }} size="large">
+              <Space orientation="vertical" style={{ width: "100%" }} size="large">
                 {departmentData.map((item) => (
                   <div key={item.name}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -380,8 +344,8 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
             extra={
               <Link href="/assets/user/add">
                 <Button type="primary" icon={<PlusOutlined />}>
-                  Add Asset
-                </Button>
+                Add Asset
+              </Button>
               </Link>
             }
           >
@@ -390,8 +354,8 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
             </p>
             <Link href="/assets/user">
               <Button icon={<FileOutlined />} block style={{ marginTop: 8 }}>
-                View My Assets
-              </Button>
+              View My Assets
+            </Button>
             </Link>
           </Card>
         </Col>
@@ -405,13 +369,7 @@ export async function UserDashboardContent({ userEmail }: { userEmail: string })
             }
           >
             {recentAssets.length > 0 ? (
-              <Table
-                columns={recentAssetsColumns}
-                dataSource={recentAssets}
-                rowKey="id"
-                pagination={false}
-                size="small"
-              />
+              <RecentAssetsTable assets={recentAssets} />
             ) : (
               <span style={{ color: "rgba(0, 0, 0, 0.45)" }}>No recent assets in the last 24 hours</span>
             )}
