@@ -191,7 +191,7 @@ export function AdminDashboardLayout({
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Asset Manager ©{new Date().getFullYear()} Powered by Supabase
+          Asset Manager ©{new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>
