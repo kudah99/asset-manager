@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Layout, Menu, theme, Avatar, Dropdown } from "antd";
+import { Layout, Menu, theme, Avatar, Dropdown, Spin, message } from "antd";
 import type { MenuProps } from "antd";
 import {
   DashboardOutlined,
@@ -28,6 +28,7 @@ export function AdminDashboardLayout({
   userEmail,
 }: AdminDashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const {
@@ -52,9 +53,18 @@ export function AdminDashboardLayout({
   }, [pathname]);
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/auth/login");
+    setIsLoggingOut(true);
+    message.loading({ content: "Signing out...", key: "logout", duration: 0 });
+    
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      message.success({ content: "Signed out successfully", key: "logout", duration: 1 });
+      router.push("/auth/login");
+    } catch (error) {
+      message.error({ content: "Error signing out", key: "logout", duration: 2 });
+      setIsLoggingOut(false);
+    }
   };
 
   const userMenuItems: MenuProps["items"] = [
@@ -111,7 +121,8 @@ export function AdminDashboardLayout({
   ];
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Spin spinning={isLoggingOut} tip="Signing out..." size="large">
+      <Layout style={{ minHeight: "100vh" }}>
       <Sider
         collapsible
         collapsed={collapsed}
@@ -195,6 +206,7 @@ export function AdminDashboardLayout({
         </Footer>
       </Layout>
     </Layout>
+    </Spin>
   );
 }
 
