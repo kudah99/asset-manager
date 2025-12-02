@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
+import { sendEmail, createAssetCreatedEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -60,6 +61,33 @@ export async function POST(request: Request) {
         );
       }
       return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    // Send email notification to user about successful asset creation
+    const userEmail = authData.claims.email as string;
+    if (userEmail) {
+      const dashboardUrl = process.env.NEXT_PUBLIC_APP_URL 
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/assets/user`
+        : "http://localhost:3000/assets/user";
+      
+      const emailHtml = createAssetCreatedEmail(
+        data.name,
+        data.category || 'N/A',
+        data.department || 'N/A',
+        data.cost,
+        data.date_purchased,
+        dashboardUrl
+      );
+      
+      // Send email asynchronously - don't block the response if email fails
+      sendEmail({
+        to: userEmail,
+        subject: "Asset Created Successfully - Asset Manager",
+        html: emailHtml,
+      }).catch((emailError) => {
+        // Log email error but don't fail the request
+        console.error("Failed to send asset creation email:", emailError);
+      });
     }
 
     return NextResponse.json({ success: true, asset: data });

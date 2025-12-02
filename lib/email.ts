@@ -42,9 +42,27 @@ export async function sendEmail({ to, subject, html }: SendEmailOptions) {
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error("❌ Error sending email:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    
+    // Provide helpful error messages for common Gmail issues
+    let helpfulError = errorMessage;
+    if (errorMessage.includes("Invalid login") || errorMessage.includes("BadCredentials") || errorMessage.includes("535")) {
+      helpfulError = `Gmail authentication failed. Please ensure:
+1. You're using an App Password (not your regular Gmail password)
+2. 2-Step Verification is enabled on your Google Account
+3. The App Password was generated for "Mail" application
+4. There are no extra spaces in SMTP_PASSWORD
+
+To generate an App Password:
+- Go to: https://myaccount.google.com/apppasswords
+- Or: Google Account > Security > 2-Step Verification > App passwords
+- Select "Mail" and your device
+- Copy the 16-character password (no spaces)`;
+    }
+    
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: helpfulError,
     };
   }
 }
@@ -147,6 +165,140 @@ export function createUserCredentialsEmail(email: string, password: string, logi
 
         <p>You can now login to the Asset Manager system:</p>
         <a href="${loginUrl}" class="button">Login to Asset Manager</a>
+
+        <p>If you have any questions or need assistance, please contact your administrator.</p>
+      </div>
+      <div class="footer">
+        <p>This is an automated message from Asset Manager. Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return html;
+}
+
+export function createAssetCreatedEmail(assetName: string, category: string, department: string, cost: number | null, datePurchased: string | null, dashboardUrl: string) {
+  const formattedCost = cost !== null ? `$${cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'N/A';
+  const formattedDate = datePurchased ? new Date(datePurchased).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+  
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        .header {
+          background-color: #20b2aa;
+          color: white;
+          padding: 20px;
+          text-align: center;
+          border-radius: 5px 5px 0 0;
+        }
+        .content {
+          background-color: #f9f9f9;
+          padding: 30px;
+          border-radius: 0 0 5px 5px;
+        }
+        .success-badge {
+          background-color: #d4edda;
+          border: 1px solid #c3e6cb;
+          color: #155724;
+          padding: 15px;
+          border-radius: 5px;
+          margin: 20px 0;
+          text-align: center;
+          font-weight: bold;
+        }
+        .asset-details {
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          margin: 20px 0;
+          border-left: 4px solid #20b2aa;
+        }
+        .detail-item {
+          margin: 10px 0;
+          padding: 8px 0;
+          border-bottom: 1px solid #eee;
+        }
+        .detail-item:last-child {
+          border-bottom: none;
+        }
+        .label {
+          font-weight: bold;
+          color: #666;
+          display: inline-block;
+          width: 140px;
+        }
+        .value {
+          color: #333;
+        }
+        .button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #20b2aa;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          margin: 20px 0;
+        }
+        .footer {
+          text-align: center;
+          color: #666;
+          font-size: 12px;
+          margin-top: 30px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>Asset Created Successfully</h1>
+      </div>
+      <div class="content">
+        <p>Hello,</p>
+        <p>Your asset has been created successfully in the Asset Manager system.</p>
+        
+        <div class="success-badge">
+          ✓ Asset Created Successfully
+        </div>
+        
+        <div class="asset-details">
+          <h3 style="margin-top: 0; color: #20b2aa;">Asset Details</h3>
+          <div class="detail-item">
+            <span class="label">Asset Name:</span>
+            <span class="value">${assetName}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Category:</span>
+            <span class="value">${category}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Department:</span>
+            <span class="value">${department}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Cost:</span>
+            <span class="value">${formattedCost}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Date Purchased:</span>
+            <span class="value">${formattedDate}</span>
+          </div>
+        </div>
+
+        <p>You can view and manage your assets in the dashboard:</p>
+        <div style="text-align: center;">
+          <a href="${dashboardUrl}" class="button">View My Assets</a>
+        </div>
 
         <p>If you have any questions or need assistance, please contact your administrator.</p>
       </div>
