@@ -8,7 +8,6 @@ import {
   FileOutlined,
   UserOutlined,
   LogoutOutlined,
-  BellOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -64,11 +63,6 @@ export function UserDashboardLayout({
       icon: <FileOutlined />,
       label: "My Assets",
       onClick: () => router.push("/assets/user"),
-    },
-    {
-      key: "3",
-      icon: <BellOutlined />,
-      label: "Notifications",
     },
   ];
 
