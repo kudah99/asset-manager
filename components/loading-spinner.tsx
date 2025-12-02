@@ -16,6 +16,13 @@ export function LoadingSpinner() {
     alignItems: "center",
     minHeight: "100vh",
     width: "100%",
+    backgroundColor: "#ffffff",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 9999,
   };
 
   // Use simple CSS spinner during SSR to avoid Date.now() issue with Ant Design Spin

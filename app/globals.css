@@ -62,9 +62,13 @@
   * {
     @apply border-border;
   }
+  html {
+    background-color: #ffffff;
+  }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #ffffff;
   }
 }
 
