@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { Table, Tag, Button, Space, Dropdown } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { MenuProps } from "antd";
-import { ReloadOutlined, DownloadOutlined, FileExcelOutlined, FileTextOutlined } from "@ant-design/icons";
+import { ReloadOutlined, DownloadOutlined, FileExcelOutlined, FileTextOutlined, EyeOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
 import { exportToExcel, exportToCSV } from "@/lib/export";
+import { AssetDetailModal } from "@/components/asset-detail-modal";
 
 interface Asset {
   id: string;
@@ -23,6 +24,8 @@ interface Asset {
 export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchAssets = async () => {
     setLoading(true);
@@ -55,7 +58,7 @@ export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
   }, [refreshTrigger]);
 
   const getStatusColor = (status?: string) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "active":
         return "green";
       case "inactive":
@@ -64,6 +67,8 @@ export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
         return "orange";
       case "retired":
         return "red";
+      case "warranty registered":
+        return "blue";
       default:
         return "blue";
     }
@@ -144,6 +149,22 @@ export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
         <Tag color={getStatusColor(status)}>{status || "active"}</Tag>
       ),
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Button
+          type="link"
+          icon={<EyeOutlined />}
+          onClick={() => {
+            setSelectedAsset(record);
+            setModalOpen(true);
+          }}
+        >
+          View Details
+        </Button>
+      ),
+    },
   ];
 
   return (
@@ -172,6 +193,17 @@ export function MyAssetsList({ refreshTrigger }: { refreshTrigger?: number }) {
         rowKey="id"
         loading={loading}
         pagination={{ pageSize: 10 }}
+      />
+      <AssetDetailModal
+        asset={selectedAsset}
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedAsset(null);
+        }}
+        onWarrantyRegistered={() => {
+          fetchAssets();
+        }}
       />
     </div>
   );

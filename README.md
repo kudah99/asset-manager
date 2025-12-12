@@ -31,6 +31,7 @@ SMTP_USER=your-email@gmail.com
 SMTP_PASSWORD=your-app-password
 SMTP_FROM=your-email@gmail.com
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+WARRANTY_API_KEY=your_warranty_api_key
 ```
 
 

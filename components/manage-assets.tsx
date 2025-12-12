@@ -136,6 +136,25 @@ export function ManageAssets() {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (status) => {
+        const getStatusColor = (status?: string) => {
+          switch (status?.toLowerCase()) {
+            case "active":
+              return "green";
+            case "inactive":
+              return "default";
+            case "maintenance":
+              return "orange";
+            case "retired":
+              return "red";
+            case "warranty registered":
+              return "blue";
+            default:
+              return "blue";
+          }
+        };
+        return <Tag color={getStatusColor(status)}>{status || "active"}</Tag>;
+      },
     },
     {
       title: "Actions",
