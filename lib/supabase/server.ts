@@ -7,7 +7,14 @@ import { cookies } from "next/headers";
  * it.
  */
 export async function createClient() {
-  const cookieStore = await cookies();
+  let cookieStore;
+  try {
+    cookieStore = await cookies();
+  } catch (error) {
+    // If cookies() fails, we can't create a proper client
+    // This should not happen in normal circumstances
+    throw new Error("Failed to access cookies");
+  }
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,13 +26,17 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
-            );
-          } catch {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch (error) {
             // The `setAll` method was called from a Server Component.
             // This can be ignored if you have proxy refreshing
             // user sessions.
+            // In API routes, cookie setting might fail silently
+            if (process.env.NODE_ENV === "development") {
+              console.warn("Cookie setting failed (this is normal in some contexts):", error);
+            }
           }
         },
       },
