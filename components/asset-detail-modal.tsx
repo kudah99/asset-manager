@@ -162,9 +162,15 @@ export function AssetDetailModal({ asset, open, onClose, onWarrantyRegistered }:
         </Descriptions.Item>
       </Descriptions>
 
-      {asset.status?.toLowerCase() !== "warranty registered" && (
-        <div style={{ marginTop: 24 }}>
-          <h3 style={{ marginBottom: 16 }}>Warranty Registration</h3>
+      <div style={{ marginTop: 24 }}>
+        <h3 style={{ marginBottom: 16 }}>Warranty Registration</h3>
+        {asset.status?.toLowerCase() === "warranty registered" ? (
+          <Space>
+            <Tag color="blue" icon={<SafetyCertificateOutlined />} style={{ fontSize: 14, padding: "8px 16px" }}>
+              Warranty Registered
+            </Tag>
+          </Space>
+        ) : (
           <Space direction="vertical" style={{ width: "100%" }} size="middle">
             <div>
               <label style={{ display: "block", marginBottom: 8 }}>
@@ -218,8 +224,8 @@ export function AssetDetailModal({ asset, open, onClose, onWarrantyRegistered }:
               />
             </div>
           </Space>
-        </div>
-      )}
+        )}
+      </div>
     </Modal>
   );
 }
