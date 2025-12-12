@@ -11,7 +11,7 @@
  * which handles authentication and RLS policies automatically.
  */
 
-import { Pool } from "pg";
+import { Pool, type PoolConfig } from "pg";
 
 let pool: Pool | null = null;
 
@@ -28,7 +28,7 @@ export function getPostgresPool(): Pool {
     const postgresDatabase = process.env.POSTGRES_DATABASE || "postgres";
     const postgresPassword = process.env.POSTGRES_PASSWORD;
 
-    let poolConfig: any;
+    let poolConfig: PoolConfig;
 
     // Prefer individual parameters over URL
     if (postgresHost && postgresPassword) {
@@ -92,9 +92,9 @@ export function getPostgresPool(): Pool {
  * const result = await query('SELECT * FROM assets WHERE id = $1', [assetId]);
  * ```
  */
-export async function query<T = any>(
+export async function query<T = unknown>(
   text: string,
-  params?: any[]
+  params?: unknown[]
 ): Promise<{ rows: T[]; rowCount: number }> {
   const pool = getPostgresPool();
   const start = Date.now();

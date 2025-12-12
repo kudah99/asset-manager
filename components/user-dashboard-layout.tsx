@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Layout, Menu, theme, Avatar, Dropdown, Button, Spin, message } from "antd";
+import { Layout, Menu, theme, Avatar, Dropdown, Spin, message } from "antd";
 import type { MenuProps } from "antd";
 import {
   DashboardOutlined,
@@ -42,7 +42,7 @@ export function UserDashboardLayout({
       await supabase.auth.signOut();
       message.success({ content: "Signed out successfully", key: "logout", duration: 1 });
       router.push("/auth/login");
-    } catch (error) {
+    } catch {
       message.error({ content: "Error signing out", key: "logout", duration: 2 });
       setIsLoggingOut(false);
     }

@@ -34,7 +34,7 @@ export function UserList({ refreshTrigger }: UserListProps) {
       } else {
         toast.error(data.error || "Failed to fetch users");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while fetching users");
     } finally {
       setLoading(false);
