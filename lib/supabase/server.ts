@@ -7,7 +7,9 @@ import { cookies } from "next/headers";
  * it.
  */
 export async function createClient() {
-  const cookieStore = await cookies();
+  // Next.js 15: cookies() is async and must be awaited
+  // The promise is properly handled here
+  const cookieStore: Awaited<ReturnType<typeof cookies>> = await cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
